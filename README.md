@@ -38,5 +38,4 @@ Reuslt
 ```
 
 ###Demo/Usage###
-Screenshot
-![a demo][demo.gif]
+Swift mode is being used for <a href="https://codeyourcloud.com">codeyourcloud.com</a>.
