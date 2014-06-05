@@ -1,7 +1,3 @@
-function wordRegexp(words) {
-	return new RegExp("^((" + words.join(")|(") + "))\\b");
-}
-
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
     mod(require("../../lib/codemirror"));
@@ -11,7 +7,6 @@ function wordRegexp(words) {
     mod(CodeMirror);
 })(function(CodeMirror) {
 "use strict";
-
 
 function getWord(string, pos){
 	
@@ -45,10 +40,8 @@ function getWord(string, pos){
 CodeMirror.defineMode("swift", function() {
 	
 	
-	var keywords = ["class", "deinit", "enum", "extension", "func", "import", "init", "let", "protocol", "static", "struct", "subscript", "typealias", "var","as", "dynamicType", "is", "new", "super", "self", "Self", "Type", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", "break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];
-	
-	var indent = ["break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];
-	
+	var keywords = ["class", "deinit", "enum", "extension", "func", "import", "init", "let", "protocol", "static", "struct", "subscript", "typealias", "var","as", "dynamicType", "is", "new", "super", "self", "Self", "Type", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", "break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];	
+
 	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil"];
 	
 	var numbers = ["0","1","2","3","4","5","6","7","8","9"];
@@ -73,6 +66,9 @@ CodeMirror.defineMode("swift", function() {
         comment: false,
         num_left: 0,
         num_right: 0,
+        word: "",
+        back: 0,
+        back_type: false,
       };
     },
 	
@@ -141,6 +137,18 @@ CodeMirror.defineMode("swift", function() {
 					state.comment = true;
 					return "comment";
 				}
+			}
+			if(ch === "(" && state.inner){
+				state.num_left++;
+				return null;
+			}
+			if(ch === ")" && state.inner){
+				state.num_right++;
+				if(state.num_left === state.num_right){
+					state.inner = false;
+					state.string = true;
+				}
+				return null;
 			}
 			var ret = getWord(stream.string, stream.pos);
 			var the_word = ret[1];
@@ -247,6 +255,9 @@ CodeMirror.defineMode("swift", function() {
 		    if (stream.match(properties)) {
 		    	return "property";
 		    }
+			
+			
+		    
 		}
 	}
 	
