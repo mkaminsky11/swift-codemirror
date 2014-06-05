@@ -1,8 +1,11 @@
 #Swift + CodeMirror#
+
+###About##
 Swift, recently released by Apple, promises to become a more friendly alternative to Objective-C. It that's the case, web-based editors like Ace and CodeMirror will need syntax highlighting for the language.
 
 This is a somewhat crude Swift mode.
 
+###Progress###
 Done
 <ul>
   <li>Keywords <code>for else var ...</code></li>
@@ -33,3 +36,7 @@ Reuslt
 ```
 > this is an outer string and inner variable
 ```
+
+###Demo/Usage###
+Screenshot
+![a demo][demo.gif]
