@@ -8,11 +8,14 @@
 })(function(CodeMirror) {
 "use strict";
 
+var separators = [' ', '\\\+', '\\\-', '\\\(', '\\\)', '\\\*', '/', ':', '\\\?','\\\<','\\\>', ' '];
+var tokens = new RegExp(separators.join('|'), 'g');
+	
 function getWord(string, pos){
 	
 	var index = -1;
 	var count = 1;
-	var words = string.split(" ");
+	var words = string.split(tokens);
 	
 	for(var i = 0; i < words.length; i++){
 		for(var j = 1; j <= words[i].length; j++){
@@ -44,9 +47,12 @@ CodeMirror.defineMode("swift", function() {
 
 	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil"];
 	
+	var types = ["String", "bool",]
+	
 	var numbers = ["0","1","2","3","4","5","6","7","8","9"];
 	
-	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">",";","(",")"];
+	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">"];
+	var puncuation = [";",",",".","(",")"]
 	
 	var delimiters = /^(?:[()\[\]{},:`=;]|\.\.?\.?)/;
 	var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;
@@ -79,11 +85,8 @@ CodeMirror.defineMode("swift", function() {
 		if (stream.eatSpace()) {
 			return null;
 		}
-		
-		
 		ch = stream.next();
-		
-		
+
 		if(state.string){
 			if(state.escape){
 				state.escape = false;
@@ -150,33 +153,40 @@ CodeMirror.defineMode("swift", function() {
 				}
 				return null;
 			}
+			
 			var ret = getWord(stream.string, stream.pos);
 			var the_word = ret[1];
 			var prev_word = ret[0];
+			
 			
 			//console.log(stream.string + " " + stream.pos + " " + the_word);
 			if(operators.indexOf(ch + "") !== -1){
 				return "operator";
 			}
-			if(commonConstants.indexOf(the_word) !== -1){
-				return "atom";
-			}
-			if(numbers.indexOf(the_word) !== -1){
-				return "number";
-			}
-			if( (numbers.indexOf(the_word.charAt(0) + "") !== -1 || operators.indexOf(the_word.charAt(0) + "")) && numbers.indexOf(ch) !== -1){
-				return "number";
-			}
-			if(keywords.indexOf(the_word) !== -1 || keywords.indexOf(the_word.split("(")[0]) !== -1){
-				return "keyword";
-			}
-			if(the_word.charAt(0) === "@"){
-				return "def";
-			}
-			if(prev_word === "var" || prev_word === "let"){
-				return "def";
+			if(puncuation.indexOf(ch + "") !== -1){
+				return "punctuation";
 			}
 			
+			if(typeof the_word !== 'undefined'){
+				if(commonConstants.indexOf(the_word) !== -1){
+					return "atom";
+				}
+				if(numbers.indexOf(the_word) !== -1){
+					return "number";
+				}
+				if((numbers.indexOf(the_word.charAt(0) + "") !== -1 || operators.indexOf(the_word.charAt(0) + "") ) && numbers.indexOf(ch) !== -1){
+					return "number";
+				}
+				if(keywords.indexOf(the_word) !== -1 || keywords.indexOf(the_word.split(tokens)[0]) !== -1){
+					return "keyword";
+				}
+				if(the_word.charAt(0) === "@"){
+					return "def";
+				}
+				if(prev_word === "var" || prev_word === "let"){
+					return "def";
+				}
+			}
 			
 			
 			if(ch === "'" || ch === '"'){
