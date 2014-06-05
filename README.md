@@ -1,17 +1,16 @@
 #Swift + CodeMirror#
-===========
 Swift, recently released by Apple, promises to become a more friendly alternative to Objective-C. It that's the case, web-based editors like Ace and CodeMirror will need syntax highlighting for the language.
 
 This is a somewhat crude Swift mode.
 
 Done
 <ul>
-  <li>Keywords</li>
-  <li>@ - preffixed</li>
-  <li>Numbers</li>
+  <li>Keywords <code>for else var ...</code></li>
+  <li>@ - preffixed <code>@lazy var lazy_variable = "lazy..."</code></li>
+  <li>Numbers <code>var pi = 3.14159</code></li>
   <li>Comments</li>
-  <li>Constants<li>
-  <li>Operators</li>
+  <li>Constants <code>var something = nil</code><li>
+  <li>Operators <code>+ - * ...</code></li>
   <li>String</li>
   <li>Variable in a string</li>
   <li>Regex</li>
