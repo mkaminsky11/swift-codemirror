@@ -39,5 +39,7 @@ Reuslt
 
 ###Demo/Usage###
 <img src="swift.gif" alt="screenshot">
+
+
 Swift mode is being used for <a href="https://codeyourcloud.com">codeyourcloud.com</a>.
-A demo can be seen at <a href="http://mkaminsky11.github.io#code">here</a>.
+A demo can be seen <a href="http://mkaminsky11.github.io#code">here</a>.
