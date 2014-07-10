@@ -1,6 +1,6 @@
 #Swift + CodeMirror#
 
- ###About##
+###About###
 Swift, recently released by Apple, promises to become a more friendly alternative to Objective-C. It that's the case, web-based editors like Ace and CodeMirror will need syntax highlighting for the language.
 
 This is a somewhat crude Swift mode.
