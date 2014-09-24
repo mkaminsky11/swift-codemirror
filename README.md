@@ -1,6 +1,6 @@
 #Swift + CodeMirror#
 
-###About##
+###About###
 Swift, recently released by Apple, promises to become a more friendly alternative to Objective-C. It that's the case, web-based editors like Ace and CodeMirror will need syntax highlighting for the language.
 
 This is a somewhat crude Swift mode.
@@ -19,7 +19,7 @@ Done
   <li>Regex</li>
 </ul>
 
-Stil to do
+Still to do
 <ul>
   <li>Indenting</li>
   <li>Autocomplete</li>
@@ -32,16 +32,20 @@ Code
 var inner_var = "inner variable";
 println("this is an outer string and \(inner_var)");
 ```
-Reuslt
+Result
 ```
 > this is an outer string and inner variable
 ```
 
 ###Demo/Usage###
 <img src="swift.gif" alt="screenshot">
+
+
 Swift mode is being used for <a href="https://codeyourcloud.com">codeyourcloud.com</a>.
 
 Html
 ```html
 <link href=""
 ```
+=======
+A demo can be seen <a href="http://mkaminsky11.github.io#code">here</a>.
