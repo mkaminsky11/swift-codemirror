@@ -40,3 +40,8 @@ Reuslt
 ###Demo/Usage###
 <img src="swift.gif" alt="screenshot">
 Swift mode is being used for <a href="https://codeyourcloud.com">codeyourcloud.com</a>.
+
+Html
+```html
+<link href=""
+```

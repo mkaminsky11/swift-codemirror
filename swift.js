@@ -51,7 +51,7 @@ CodeMirror.defineMode("swift", function() {
 	
 	var numbers = ["0","1","2","3","4","5","6","7","8","9"];
 	
-	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">"];
+	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">","[","]"];
 	var puncuation = [";",",",".","(",")"]
 	
 	var delimiters = /^(?:[()\[\]{},:`=;]|\.\.?\.?)/;
@@ -168,6 +168,10 @@ CodeMirror.defineMode("swift", function() {
 			}
 			
 			if(typeof the_word !== 'undefined'){
+				if(the_word.charAt(0) === "#"){
+					return null;
+				}
+				
 				if(commonConstants.indexOf(the_word) !== -1){
 					return "atom";
 				}
@@ -187,8 +191,7 @@ CodeMirror.defineMode("swift", function() {
 					return "def";
 				}
 			}
-			
-			
+
 			if(ch === "'" || ch === '"'){
 				state.string = true;
 				return "string";
@@ -205,8 +208,7 @@ CodeMirror.defineMode("swift", function() {
 				return null;
 			}
 			
-			
-			
+
 			// Handle number literals
 		    if (stream.match(/^-?[0-9\.]/, false)) {
 		      var floatLiteral = false;
