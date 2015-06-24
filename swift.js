@@ -1,3 +1,11 @@
+/*
+SIMPLE SWIFT MODE MADE BY MICHALE KAMINSKY (github.com/mkaminsky11)
+============
+TODO:
+ + properties
+ + strings -> ' and "
+*/
+
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
     mod(require("../../lib/codemirror"));
@@ -43,16 +51,16 @@ function getWord(string, pos){
 CodeMirror.defineMode("swift", function() {
 	
 	
-	var keywords = ["class", "deinit", "enum", "extension", "func", "import", "init", "let", "protocol", "static", "struct", "subscript", "typealias", "var","as", "dynamicType", "is", "new", "super", "self", "Self", "Type", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", "break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];	
+	var keywords = ["var","let","class", "deinit", "enum", "extension", "func", "import", "init", "let", "protocol", "static", "struct", "subscript", "typealias", "var","as", "dynamicType", "is", "new", "super", "self", "Self", "Type", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", "break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];	
 
-	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil"];
+	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil", "null", "this"];
 	
-	var types = ["String", "bool",]
+	var types = ["String", "bool","int","string","double","Double","Int","Float","float"];
 	
 	var numbers = ["0","1","2","3","4","5","6","7","8","9"];
 	
-	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">","[","]"];
-	var puncuation = [";",",",".","(",")"]
+	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">"];
+	var punc = [";",",",".","(",")","{","}","[","]"];
 	
 	var delimiters = /^(?:[()\[\]{},:`=;]|\.\.?\.?)/;
 	var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;
@@ -64,17 +72,14 @@ CodeMirror.defineMode("swift", function() {
     startState: function() {
       return {
         prev: false,
-        func: false,
-        op: false,
         string: false,
         escape: false,
         inner: false,
         comment: false,
         num_left: 0,
         num_right: 0,
-        word: "",
-        back: 0,
-        back_type: false,
+        doubleString: false,
+        singleString: false
       };
     },
 	
@@ -158,20 +163,21 @@ CodeMirror.defineMode("swift", function() {
 			var the_word = ret[1];
 			var prev_word = ret[0];
 			
-			
-			//console.log(stream.string + " " + stream.pos + " " + the_word);
 			if(operators.indexOf(ch + "") !== -1){
 				return "operator";
 			}
-			if(puncuation.indexOf(ch + "") !== -1){
+			if(punc.indexOf(ch) !== -1){
 				return "punctuation";
 			}
 			
 			if(typeof the_word !== 'undefined'){
+				the_word = the_word.trim();
+				if(typeof prev_word !== 'undefined'){
+					prev_word = prev_word.trim();
+				}
 				if(the_word.charAt(0) === "#"){
 					return null;
 				}
-				
 				if(commonConstants.indexOf(the_word) !== -1){
 					return "atom";
 				}
@@ -184,10 +190,7 @@ CodeMirror.defineMode("swift", function() {
 				if(keywords.indexOf(the_word) !== -1 || keywords.indexOf(the_word.split(tokens)[0]) !== -1){
 					return "keyword";
 				}
-				if(the_word.charAt(0) === "@"){
-					return "def";
-				}
-				if(prev_word === "var" || prev_word === "let"){
+				if(keywords.indexOf(prev_word) !== -1){
 					return "def";
 				}
 			}
@@ -222,7 +225,6 @@ CodeMirror.defineMode("swift", function() {
 		      if (stream.match(/^-?\.\d+/)) {
 		        floatLiteral = true;
 		      }
-		
 		      if (floatLiteral) {
 		        // prevent from getting extra . on 1..
 		        if (stream.peek() == "."){
@@ -267,9 +269,8 @@ CodeMirror.defineMode("swift", function() {
 		    if (stream.match(properties)) {
 		    	return "property";
 		    }
-			
-			
-		    
+
+		    return "variable";
 		}
 	}
 	
