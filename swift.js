@@ -3,7 +3,6 @@ SIMPLE SWIFT MODE MADE BY MICHALE KAMINSKY (github.com/mkaminsky11)
 ============
 TODO:
  + properties
- + strings -> ' and "
 */
 
 (function(mod) {
@@ -16,7 +15,7 @@ TODO:
 })(function(CodeMirror) {
 "use strict";
 
-var separators = [' ', '\\\+', '\\\-', '\\\(', '\\\)', '\\\*', '/', ':', '\\\?','\\\<','\\\>', ' '];
+var separators = [' ', '\\\+', '\\\-', '\\\(', '\\\)', '\\\*', '/', ':', '\\\?','\\\<','\\\>', ' ', '\\\.'];
 var tokens = new RegExp(separators.join('|'), 'g');
 	
 function getWord(string, pos){
@@ -25,7 +24,10 @@ function getWord(string, pos){
 	var count = 1;
 	var words = string.split(tokens);
 	
+	console.log(words);
+
 	for(var i = 0; i < words.length; i++){
+		//words[i].trim();
 		for(var j = 1; j <= words[i].length; j++){
 			if(count === pos){
 				index = i;
@@ -52,16 +54,11 @@ CodeMirror.defineMode("swift", function() {
 	
 	
 	var keywords = ["var","let","class", "deinit", "enum", "extension", "func", "import", "init", "let", "protocol", "static", "struct", "subscript", "typealias", "var","as", "dynamicType", "is", "new", "super", "self", "Self", "Type", "__COLUMN__", "__FILE__", "__FUNCTION__", "__LINE__", "break", "case", "continue", "default", "do", "else", "fallthrough", "if", "in", "for", "return", "switch", "where", "while", "associativity", "didSet", "get", "infix", "inout", "left", "mutating", "none", "nonmutating", "operator", "override", "postfix", "precedence", "prefix", "right", "set", "unowned", "unowned(safe)", "unowned(unsafe)", "weak" , "willSet"];	
-
-	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil", "null", "this"];
-	
+	var commonConstants = ["Infinity", "NaN", "undefined", "null", "true", "false", "on", "off", "yes", "no", "nil", "null", "this", "super"];
 	var types = ["String", "bool","int","string","double","Double","Int","Float","float"];
-	
 	var numbers = ["0","1","2","3","4","5","6","7","8","9"];
-	
 	var operators = ["+", "-", "/", "*", "%", "=", "|", "&", "<", ">"];
 	var punc = [";",",",".","(",")","{","}","[","]"];
-	
 	var delimiters = /^(?:[()\[\]{},:`=;]|\.\.?\.?)/;
 	var identifiers = /^[_A-Za-z$][_A-Za-z$0-9]*/;
 	var properties = /^(@|this\.)[_A-Za-z$][_A-Za-z$0-9]*/;
@@ -98,8 +95,10 @@ CodeMirror.defineMode("swift", function() {
 				return "string";
 			}
 			else{
-				if((ch === '"' || ch === "'") && !state.escape){
+				if((ch === "\"" && (state.doubleString === true && state.singleString === false) || (ch === "'" && (state.doubleString === false && state.singleString === true))) && state.escape === false){
 					state.string = false;
+					state.doubleString = false;
+					state.singleString = false;
 					return "string";
 				}
 				if(ch === "\\" && stream.peek() === "("){
@@ -171,6 +170,7 @@ CodeMirror.defineMode("swift", function() {
 			}
 			
 			if(typeof the_word !== 'undefined'){
+				console.log(the_word);
 				the_word = the_word.trim();
 				if(typeof prev_word !== 'undefined'){
 					prev_word = prev_word.trim();
@@ -195,8 +195,14 @@ CodeMirror.defineMode("swift", function() {
 				}
 			}
 
-			if(ch === "'" || ch === '"'){
+			if(ch === '"' && state.doubleString === false){
 				state.string = true;
+				state.doubleString = true;
+				return "string";
+			}
+			if(ch === "'" && state.singleString === false){
+				state.string = true;
+				state.singleString = true;
 				return "string";
 			}
 			if(ch === "(" && state.inner){
